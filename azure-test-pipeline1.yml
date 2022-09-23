@@ -43,14 +43,14 @@ jobs:
          build_code: $(Build.BuildId)
        displayName: gradlew assembleDebug test
   
-    steps:
+    
      - task: CopyFiles@2
        inputs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)'
        displayName: Copy .apk files to artifact staging directory
 
-    steps:
+    
      - task: PublishBuildArtifacts@1
         inputs:
           pathToPublish: '$(build.artifactStagingDirectory)'
