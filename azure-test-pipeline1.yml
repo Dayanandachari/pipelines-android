@@ -24,7 +24,7 @@ resources:
       name: Dayanandachari/andriod_templates
       endpoint: github.com
 
-job: build and publish
+- job: build and publish
   steps:
    - task: Gradle@2
      inputs:
