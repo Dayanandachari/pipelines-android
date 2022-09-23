@@ -22,7 +22,7 @@ resources:
     - repository: templates
       type: github
       name: Dayanandachari/andriod_templates
-        endpoint: github.com
+      endpoint: github.com
 
 - job: build and publish
   steps:
