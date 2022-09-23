@@ -24,51 +24,52 @@ resources:
       name: Dayanandachari/andriod_templates
       endpoint: github.com
 
-- job: build and publish
-  steps:
-   - task: Gradle@2
-     inputs:
-       workingDirectory: ''
-       gradleWrapperFile: 'gradlew'
-       gradleOptions: '-Xmx3072m'
-       javaHomeOption: 'JDKVersion'
-       jdkVersionOption: '1.8'
-       jdkArchitectureOption: 'x64'
-       publishJUnitResults: true
-       testResultsFiles: '**/TEST-*.xml'
-       tasks: 'assembleDebug test'
-     env:
-       Build_version: $(Build_version)
-       build_code: $(Build.BuildId)
-     displayName: gradlew assembleDebug test
+jobs:
+  - job: build and publish
+    steps:
+     - task: Gradle@2
+       inputs:
+         workingDirectory: ''
+         gradleWrapperFile: 'gradlew'
+         gradleOptions: '-Xmx3072m'
+         javaHomeOption: 'JDKVersion'
+         jdkVersionOption: '1.8'
+         jdkArchitectureOption: 'x64'
+         publishJUnitResults: true
+         testResultsFiles: '**/TEST-*.xml'
+         tasks: 'assembleDebug test'
+       env:
+         Build_version: $(Build_version)
+         build_code: $(Build.BuildId)
+       displayName: gradlew assembleDebug test
   
-  steps:
-   - task: CopyFiles@2
-     inputs:
-        contents: '**/*.apk'
-        targetFolder: '$(build.artifactStagingDirectory)'
-     displayName: Copy .apk files to artifact staging directory
+    steps:
+     - task: CopyFiles@2
+       inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)'
+       displayName: Copy .apk files to artifact staging directory
 
-  steps:
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: '$(build.artifactStagingDirectory)'
-        artifactName: 'drop'
-        artifactType: 'container'
-      displayName: Publish artifacts
+    steps:
+     - task: PublishBuildArtifacts@1
+        inputs:
+          pathToPublish: '$(build.artifactStagingDirectory)'
+          artifactName: 'drop'
+          artifactType: 'container'
+        displayName: Publish artifacts
 
-  steps:
-   - task: AndroidSigning@3
-     inputs:
-       apkFiles: '**/*.apk'
-       apksignerKeystoreFile: 'secret_andriod.jks'
-       apksignerKeystorePassword: '$(Key_password)'
-       apksignerKeystoreAlias: 'andriod_secret'
-       apksignerKeyPassword: '$(keystore_password)'
+    steps:
+     - task: AndroidSigning@3
+       inputs:
+         apkFiles: '**/*.apk'
+         apksignerKeystoreFile: 'secret_andriod.jks'
+         apksignerKeystorePassword: '$(Key_password)'
+         apksignerKeystoreAlias: 'andriod_secret'
+         apksignerKeyPassword: '$(keystore_password)'
 
-- job: deploy to dev 
-  steps:
-    - task:
-      template: andriod_templates/parameter_templates.yml
+  - job: deploy to dev 
+    steps:
+      - task:
+        template: andriod_templates/parameter_templates.yml
         parameters:
           env: dev 
