@@ -57,4 +57,8 @@ steps:
     apksignerKeystoreAlias: 'andriod_secret'
     apksignerKeyPassword: '$(keystore_password)'
 
-
+-stage
+   job:
+   - template: 
+     parameters:
+       env: dev 
